@@ -2089,9 +2089,11 @@ again:
     if (is->audioStream== -1 && video_index>=0)
     {
 
+        // TODO: allow user selection
         audio_index = av_find_best_stream(is->pFormatCtx, AVMEDIA_TYPE_AUDIO, -1, video_index, NULL, 0);
         if(audio_index >= 0)
         {
+            Debug(0,"Using audio index %" PRId64 "\n", audio_index);
             stream_component_open(is, audio_index);
 
             if (is->audioStream < 0)
