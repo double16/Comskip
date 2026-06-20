@@ -127,6 +127,7 @@ FILE*			mkvtoolnix_chapters_file = NULL;
 FILE*			mkvtoolnix_tags_file = NULL;
 extern int		demux_pid;
 extern int		selected_audio_pid;
+extern int		audio_stream_index;
 extern int		selected_subtitle_pid;
 extern int		selected_video_pid;
 extern int		demux_asf;
@@ -8778,6 +8779,7 @@ FILE* LoadSettings(int argc, char ** argv)
     struct arg_file*	cl_cut					= arg_filen(NULL, "cut", NULL, 0, 1, "CutScene file to use");
     struct arg_file*	cl_work					= arg_filen(NULL, "output", NULL, 0, 1, "Folder to use for all output files");
     struct arg_file*	cl_work_fname		= arg_filen(NULL, "output-filename", NULL, 0, 1, "Filename base to use for all output files");
+    struct arg_int*     cl_audio_stream         = arg_intn("a", "audio-stream", "<int>", 0, 1, "The audio stream index to use");
     struct arg_int*	cl_selftest					= arg_intn(NULL, "selftest", NULL, 0, 1, "Execute a selftest");
     struct arg_file*	in						= arg_filen(NULL, NULL, NULL, 1, 1, "Input file");
     struct arg_file*	out						= arg_filen(NULL, NULL, NULL, 0, 1, "Output folder for cutlist");
@@ -8816,6 +8818,7 @@ FILE* LoadSettings(int argc, char ** argv)
         cl_cut,
         cl_work,
         cl_work_fname,
+        cl_audio_stream,
         cl_selftest,
         in,
         out,
@@ -9274,6 +9277,11 @@ FILE* LoadSettings(int argc, char ** argv)
         thread_count = cl_threads->ival[0];
     }
 
+    if (cl_audio_stream->count)
+     {
+        audio_stream_index = cl_audio_stream->ival[0];
+        printf("Using audio stream index %d as per command line.\n", audio_stream_index);
+     }
     if (!loadingTXT && !useExistingLogoFile && cl_logo->count==0)
     {
         logo_file = myfopen(logofilename, "r");
